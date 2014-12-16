@@ -13,22 +13,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.eltacodeldiablo.business.service.ServiceProduct;
 
 @Controller
-public class ControllerProduct {
+public class ControllerCommand {
 
 	@Autowired
 	private ServiceProduct	serviceProduct;
-
-	@RequestMapping("/product/list")
-	public String contacts(Model model) {
-		model.addAttribute("products", serviceProduct.list(new Date()));
-		model.addAttribute("today", Calendar.getInstance());
-		return "product/products_list";
-	}
 
 	@RequestMapping("/product/details")
 	public String details(@RequestParam("id") String id, Model model) {
 		System.out.println(id);
 		return "product/products_detail";
+	}
+
+	@RequestMapping("/")
+	public String index(Model model) {
+		model.addAttribute("products", serviceProduct.list(new Date()));
+		model.addAttribute("today", Calendar.getInstance());
+		model.addAttribute("tpl_middle", "create_commande");
+		model.addAttribute("tpl_header", "header");
+		model.addAttribute("tpl_footer", "footer");
+		return "index";
 	}
 
 	@ModelAttribute

@@ -1,0 +1,104 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{home.title}">Good Thymes Virtual Grocery</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css" media="all"
+	th:href="@{/resources/css/bootstrap.css}" />
+<link rel="stylesheet" type="text/css" media="all"
+	th:href="@{/resources/css/bottstrap-theme.css}" />
+<link rel="stylesheet" type="text/css" media="all"
+	th:href="@{/resources/css/style.css}" />
+
+<script th:src="@{/resources/js/jquery.min.js}" />
+<script th:src="@{/resources/js/bootstrap.min.js}" />
+</head>
+<body>
+
+
+	<div class="container">
+		<header th:include="fragments/frg :: ${tpl_header}"></header>
+
+		<!-- Main component for a primary marketing message or call to action -->
+		<div class="row">
+			<div class="col-sm-5">
+				<img width="100%" src="/resources/images/menu.jpg" alt="menu" />
+			</div>
+
+			<div class="col-sm-7">
+				<h2>Passer votre commande</h2>
+				<form>
+					<div class="form-group">
+						<label th:text="#{cmd.create.name}">Nom</label> <input type="text"
+							class="form-control" name="name"
+							th:placeholder="#{cmd.create.name.placeholder}" />
+					</div>
+
+
+					<fieldset>
+						<legend th:text="#{cmd.create.starter}">Entrées</legend>
+
+						<div class="demi">
+							<label> <input type="checkbox" /> Guacamole Chips
+							</label>
+						</div>
+
+					</fieldset>
+
+					<fieldset>
+						<legend th:text="#{cmd.create.main_course}">Plats</legend>
+
+						<div class="demi">
+							<span>Tacco del diablo</span> <select class="form-control">
+								<option value="">Nope</option>
+								<option value="">Poulet mariné grillé</option>
+								<option value="">BBQ Pulled Pork</option>
+								<option value="">"Carnitas" Pork confit</option>
+							</select>
+						</div>
+
+						<div class="demi">
+							<span>Diablo Burrito</span> <select class="form-control">
+								<option value="">Nope</option>
+								<option value="">Poulet mariné grillé</option>
+								<option value="">BBQ Pulled Pork</option>
+								<option value="">"Carnitas" Pork confit</option>
+							</select>
+						</div>
+
+					</fieldset>
+
+
+					<fieldset>
+						<legend th:text="#{cmd.create.dessert}">Dessert</legend>
+
+						<div class="demi">
+							<label> <input type="checkbox" /> Cupe Cake </label>
+						</div>
+						
+						<div class="demi">
+							<label> <input type="checkbox" /> Fromage Blanc</label>
+						</div>
+
+					</fieldset>
+					<br /> <br />
+					<button type="submit" class="btn btn-primary" style="display: block; width: 100%;"
+						th:text="#{cmd.create.submit}">Commander</button>
+				</form>
+			</div>
+
+
+		</div>
+
+
+		<footer th:include="fragments/frg :: ${tpl_footer}"></footer>
+	</div>
+	<!-- /container -->
+
+
+
+	<!-- 	<div th:include="footer::copy">&copy; 2011 The Static Templates</div> -->
+</body>
+</html>
