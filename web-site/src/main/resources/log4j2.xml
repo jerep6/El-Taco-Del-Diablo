@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status = The level of internal Log4j events that should be logged to the console. -->
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%d{ISO8601}] - [%p] - [THREAD %t] - %c[%l] - %m %n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<!-- ROOT logger -->
+		<Root level="INFO">
+			<AppenderRef ref="Console" />
+		</Root>
+		<Logger name="com.eltacodeldiablo" level="DEBUG" additivity="true" />
+	</Loggers>
+</Configuration>
