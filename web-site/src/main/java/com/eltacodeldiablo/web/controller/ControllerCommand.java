@@ -2,6 +2,8 @@ package com.eltacodeldiablo.web.controller;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,9 +30,11 @@ public class ControllerCommand {
 	public String index(Model model) {
 		model.addAttribute("products", serviceProduct.list(new Date()));
 		model.addAttribute("today", Calendar.getInstance());
-		model.addAttribute("tpl_middle", "create_commande");
-		model.addAttribute("tpl_header", "header");
-		model.addAttribute("tpl_footer", "footer");
+
+		Map<String, String> tplMiddle = new HashMap<>();
+		tplMiddle.put("html", "fragments/create_commande");
+		tplMiddle.put("frg", "create_commande");
+		model.addAttribute("tpl_middle", tplMiddle);
 		return "index";
 	}
 
