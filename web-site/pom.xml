@@ -7,6 +7,9 @@
 	<packaging>war</packaging>
 
 	<properties>
+	
+		<mongodb.driver.version>2.12.3</mongodb.driver.version>
+		<morphia.version>0.109</morphia.version>
 
 		<slf4j.version>1.7.7</slf4j.version>
 		<log4j.version>2.1</log4j.version>
@@ -75,6 +78,19 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-1.2-api</artifactId>
 			<version>${log4j.version}</version>
+		</dependency>
+
+
+		<!-- MongoDB -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongodb.driver.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb.morphia</groupId>
+			<artifactId>morphia</artifactId>
+			<version>${morphia.version}</version>
 		</dependency>
 	</dependencies>
 
