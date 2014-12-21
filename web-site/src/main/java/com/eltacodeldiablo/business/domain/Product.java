@@ -1,5 +1,7 @@
 package com.eltacodeldiablo.business.domain;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +13,13 @@ import org.mongodb.morphia.annotations.Id;
 @Entity("product")
 public class Product {
 	@Id
-	private String	id;
-	private String	name;
-	private Price	price;
-	private Image	image;
+	private String			id;
+	private String			name;
+	private Price			price;
+
+	private List<String>	ingredients;
+	private List<String>	spices;
+
+	private ProductType		type;
+
 }
