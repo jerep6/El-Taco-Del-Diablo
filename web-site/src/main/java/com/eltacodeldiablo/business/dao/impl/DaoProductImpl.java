@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.eltacodeldiablo.business.dao.DaoProduct;
+import com.eltacodeldiablo.business.dao.mongodb.ConverterPrice;
 import com.eltacodeldiablo.business.domain.Product;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -25,6 +26,7 @@ public class DaoProductImpl implements DaoProduct {
 	public List<Product> listAll() {
 
 		Morphia morphia = new Morphia();
+		morphia.getMapper().getConverters().addConverter(new ConverterPrice());
 		morphia.map(Product.class);
 		Datastore ds = morphia.createDatastore(mongoClient, "eltacodeldiablo");
 
