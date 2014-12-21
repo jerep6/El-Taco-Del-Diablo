@@ -4,6 +4,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -17,7 +19,17 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 @ComponentScan("com.eltacodeldiablo")
 // http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-config
 @EnableWebMvc
+// As opposed to using XML namespace element, the Java @PropertySource annotation does not automatically register a
+// PropertySourcesPlaceholderConfigurer with Spring. Instead, the bean must be explicitly defined in the configuration
+// to get the property resolution mechanism working.
+// http://www.baeldung.com/2012/02/06/properties-with-spring/
+@PropertySource("classpath:properties/environment.properties")
 public class AppConfig extends WebMvcConfigurerAdapter {
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+		// Use Environment (spring object) to resolve @Value
+		return new PropertySourcesPlaceholderConfigurer();
+	}
 
 	/** Serve statics resources (css, images, js; ...) */
 	@Override
