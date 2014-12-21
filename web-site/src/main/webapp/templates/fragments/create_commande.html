@@ -18,31 +18,21 @@
 			<fieldset>
 				<legend th:text="#{cmd.create.starter}">Entrées</legend>
 
-				<div class="demi">
-					<label> <input type="checkbox" /> Guacamole Chips
-					</label>
+				<div class="demi" th:each="prod : ${products[types['ENTREE']]}">
+					<label><input type="checkbox" th:value="${prod.id}" /> <span th:text="${prod.name}">Guacamole Chips</span></label>
 				</div>
 
 			</fieldset>
 
 			<fieldset>
 				<legend th:text="#{cmd.create.main_course}">Plats</legend>
-
-				<div class="demi">
-					<span>Tacco del diablo</span> <select class="form-control">
-						<option value="">Nope</option>
-						<option value="">Poulet mariné grillé</option>
-						<option value="">BBQ Pulled Pork</option>
-						<option value="">"Carnitas" Pork confit</option>
-					</select>
-				</div>
-
-				<div class="demi">
-					<span>Diablo Burrito</span> <select class="form-control">
-						<option value="">Nope</option>
-						<option value="">Poulet mariné grillé</option>
-						<option value="">BBQ Pulled Pork</option>
-						<option value="">"Carnitas" Pork confit</option>
+				<div class="demi" th:each="prod : ${products[types['PLAT']]}">
+					<span th:text="${prod.name}">Tacco del diablo</span>
+					<select class="form-control" name="${prod.id}">
+						<option value=""></option>
+						<option th:each="ingr : ${prod.ingredients}" 
+								th:value="${ingr}" 
+								th:text="${ingr}">Ingrédient 1</option>
 					</select>
 				</div>
 
@@ -52,14 +42,8 @@
 			<fieldset>
 				<legend th:text="#{cmd.create.dessert}">Dessert</legend>
 
-				<div class="demi">
-					<label> <input type="checkbox" /> Cupe Cake
-					</label>
-				</div>
-
-				<div class="demi">
-					<label> <input type="checkbox" /> Fromage Blanc
-					</label>
+				<div class="demi" th:each="prod : ${products[types['DESSERT']]}">
+					<label><input type="checkbox" th:value="${prod.id}" /> <span th:text="${prod.name}">Guacamole Chips</span></label>
 				</div>
 
 			</fieldset>
