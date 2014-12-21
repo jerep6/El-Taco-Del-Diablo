@@ -1,0 +1,76 @@
+
+use eltacodeldiablo
+
+
+// Entrée
+db.product.insert(
+{
+	name:"Guacamole & Chips",
+	price: 4,
+	type : {
+		code : "ENTREE"
+	},
+	ingredients : [],
+	spice : [],
+	supplement : []
+});
+
+// Plats
+db.product.insert(
+{
+	name:"Buritto",
+	price: 7,
+	type : {
+		code : "PLAT"
+	},
+	ingredients : [
+		"Poulet mariné grillé",
+		"BBQ Pulled Pork",
+		"Carnitas Porc confit"
+	],
+	spice : [
+		"Mild",
+		"Hot"
+	]
+});
+
+db.product.insert(
+{
+	name:"Tacos",
+	price: 6,
+	type : {
+		code : "PLAT"
+	},
+	ingredients : [
+		"Poulet mariné grillé",
+		"BBQ Pulled Pork",
+		"Carnitas Porc confit"
+	],
+	spice : [],
+	supplement : [
+		"Guacamole"
+	]
+});
+
+// Desserts
+db.product.insert(
+{
+	name:"Fromage Blanc + compote de pomme \"Bio\"",
+	price: 2,
+	type : {
+		code : "DESSERT"
+	},
+	ingredients : [ ],
+	spice : [ ]
+});
+
+db.product.insert(
+{
+	name:"Cheese Cake Cup",
+	price: 2.5,
+	type : {
+		code : "DESSERT"
+	},
+	ingredients : [ ],
+	spice : [ ]
+});

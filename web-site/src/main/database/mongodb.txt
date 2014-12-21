@@ -1,0 +1,24 @@
+Créer une base de donnée
+use mydatabase
+
+Supprimer une base
+use mydatabase
+db.dropDatabase()
+
+
+Créer une collection
+db.createCollection("mycollection")
+db.createCollection("mycollection", {})
+
+
+Supprimer une collection
+db.mycollection.drop()
+
+
+Lister tous les documents d'une collection
+db.mycollection.find().pretty()
+
+
+Supprimer des documents
+db.mycollection.remove({'title':'MongoDB Overview'})
+
