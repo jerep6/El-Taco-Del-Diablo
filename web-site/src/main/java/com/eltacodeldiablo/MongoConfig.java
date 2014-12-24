@@ -1,6 +1,5 @@
 package com.eltacodeldiablo;
 
-import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,19 +17,18 @@ public class MongoConfig {
 	Environment	env;
 
 	@Bean
-	public Datastore datastore() throws Exception {
-		Morphia morphia = new Morphia();
-		morphia.getMapper().getConverters().addConverter(new ConverterPrice());
-		morphia.getMapper().getConverters().addConverter(new ConverterProductType());
-
-		morphia.map(Product.class);
-		Datastore ds = morphia.createDatastore(mongo(), "eltacodeldiablo");
-		return ds;
+	public MongoClient mongo() throws Exception {
+		return new MongoClient(env.getProperty("mongodb.url"));
 	}
 
 	@Bean
-	public MongoClient mongo() throws Exception {
-		return new MongoClient(env.getProperty("mongodb.url"));
+	public Morphia morphia() throws Exception {
+		Morphia morphia = new Morphia();
+		morphia.getMapper().getConverters().addConverter(new ConverterPrice());
+		morphia.getMapper().getConverters().addConverter(new ConverterProductType());
+		morphia.map(Product.class);
+
+		return morphia;
 	}
 
 }
