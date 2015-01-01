@@ -14,7 +14,7 @@
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="@{/}" th:text="#{nav.menus}">Menus du jour</a></li>
-						<li><a href="{@/commands/}" th:text="#{nav.commands}">Commandes</a></li>
+						<li><a th:href="@{/order/}" th:text="#{nav.commands}">Commandes</a></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->

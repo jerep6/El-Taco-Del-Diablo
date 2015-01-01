@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.eltacodeldiablo.business.domain.Order;
 import com.eltacodeldiablo.business.domain.Product;
 import com.eltacodeldiablo.business.domain.ProductType;
+import com.eltacodeldiablo.business.service.ServiceOrder;
 import com.eltacodeldiablo.business.service.ServiceProduct;
 import com.eltacodeldiablo.web.form.OrderForm;
 
@@ -23,6 +25,9 @@ public class ControllerCommand {
 
 	@Autowired
 	private ServiceProduct	serviceProduct;
+
+	@Autowired
+	private ServiceOrder	serviceOrder;
 
 	@RequestMapping("/")
 	public String index(Model model) {
@@ -40,15 +45,28 @@ public class ControllerCommand {
 		model.addAttribute("order", new OrderForm());
 
 		Map<String, String> tplMiddle = new HashMap<>();
-		tplMiddle.put("html", "fragments/create_commande");
-		tplMiddle.put("frg", "create_commande");
+		tplMiddle.put("html", "fragments/order");
+		tplMiddle.put("frg", "order_create");
+		model.addAttribute("tpl_middle", tplMiddle);
+		return "index";
+	}
+
+	@RequestMapping(value = "/order", method = RequestMethod.GET)
+	public String listOrder(Model model) {
+		List<Order> orders = serviceOrder.list(new Date());
+
+		model.addAttribute("orders", orders);
+
+		Map<String, String> tplMiddle = new HashMap<>();
+		tplMiddle.put("html", "fragments/order");
+		tplMiddle.put("frg", "order_list");
 		model.addAttribute("tpl_middle", tplMiddle);
 		return "index";
 	}
 
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	public String order(@ModelAttribute OrderForm order, Model model) {
-		serviceProduct.order(order);
+		serviceOrder.order(order);
 		return "redirect:/";
 	}
 

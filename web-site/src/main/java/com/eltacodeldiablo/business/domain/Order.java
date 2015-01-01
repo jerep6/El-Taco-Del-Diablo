@@ -21,6 +21,7 @@ public class Order {
 	private String				id;
 	private String				name;
 	private Date				date;
+	private Price				total;
 
 	@Embedded
 	private List<OrderProduct>	products	= new ArrayList<>(0);	;

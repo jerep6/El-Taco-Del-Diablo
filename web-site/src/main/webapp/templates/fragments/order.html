@@ -1,6 +1,6 @@
 
 <!-- Main component for a primary marketing message or call to action -->
-<div class="row" th:fragment="create_commande">
+<div class="row" th:fragment="order_create">
 	<div class="col-sm-5">
 		<img width="100%" src="/resources/images/menu.jpg" alt="menu" />
 	</div>
@@ -57,5 +57,25 @@
 		</form>
 	</div>
 
+
+</div>
+
+
+
+
+<div class="row" th:fragment="order_list">
+	<table class="table table-bordered">
+	 <tr>
+	 	<th th:text="#{cmd.list.table.name}"></th>
+	 	<th th:text="#{cmd.list.table.products}"></th>
+	 	<th th:text="#{cmd.list.table.price}"></th>
+	 </tr>
+	 
+	 <tr th:each="o : ${orders}">
+	 	<td th:text="${o.name}"></td>
+	 	<td th:text="${o.products}"></td>
+	 	<td th:text="${o.total}"></td>
+	 </tr>
+	</table>
 
 </div>
