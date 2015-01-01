@@ -1,5 +1,6 @@
 package com.eltacodeldiablo.business.dao.mongodb;
 
+import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.converters.TypeConverter;
 import org.mongodb.morphia.mapping.MappedField;
@@ -9,9 +10,11 @@ import com.eltacodeldiablo.business.domain.ProductType;
 import com.mongodb.BasicDBObject;
 
 public class ConverterProductType extends TypeConverter implements SimpleValueConverter {
+	private final Morphia	morphia;
 
-	public ConverterProductType() {
+	public ConverterProductType(Morphia morphia) {
 		super(ProductType.class);
+		this.morphia = morphia;
 	}
 
 	@Override
@@ -25,6 +28,6 @@ public class ConverterProductType extends TypeConverter implements SimpleValueCo
 
 	@Override
 	public Object encode(final Object value, final MappedField optionalExtraInfo) {
-		return value;
+		return morphia.toDBObject(value);
 	}
 }

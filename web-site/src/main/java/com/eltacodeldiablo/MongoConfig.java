@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 
 import com.eltacodeldiablo.business.dao.mongodb.ConverterPrice;
 import com.eltacodeldiablo.business.dao.mongodb.ConverterProductType;
+import com.eltacodeldiablo.business.domain.Order;
 import com.eltacodeldiablo.business.domain.Product;
 import com.mongodb.MongoClient;
 
@@ -25,8 +26,9 @@ public class MongoConfig {
 	public Morphia morphia() throws Exception {
 		Morphia morphia = new Morphia();
 		morphia.getMapper().getConverters().addConverter(new ConverterPrice());
-		morphia.getMapper().getConverters().addConverter(new ConverterProductType());
+		morphia.getMapper().getConverters().addConverter(new ConverterProductType(morphia));
 		morphia.map(Product.class);
+		morphia.map(Order.class);
 
 		return morphia;
 	}

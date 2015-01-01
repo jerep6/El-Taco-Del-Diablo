@@ -2,6 +2,7 @@ package com.eltacodeldiablo.business.dao.impl;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,6 @@ public class DaoProductImpl extends BasicDAO<Product, String> implements DaoProd
 
 	@Override
 	public Product read(String productId) {
-		return get(productId);
+		return getDatastore().get(Product.class, new ObjectId(productId));
 	}
 }
