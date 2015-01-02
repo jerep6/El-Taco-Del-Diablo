@@ -1,0 +1,10 @@
+
+# Trouve les commandes sans prix
+db.order.find( { "total" : { "$exists" : false } } )
+
+# Ajout d'un prix aux commandes n'en possédant pas
+db.order.update(
+  { "total" : { "$exists" : false } },
+  { $set: { total: 0 }},
+  { multi: true }
+)

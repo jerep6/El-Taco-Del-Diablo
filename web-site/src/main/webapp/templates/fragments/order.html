@@ -74,7 +74,7 @@
 	 <tr th:each="o : ${orders}">
 	 	<td th:text="${o.name}"></td>
 	 	<td th:text="${o.products}"></td>
-	 	<td th:text="${o.total}"></td>
+	 	<td th:text="${o.total.value}"></td>
 	 </tr>
 	</table>
 
