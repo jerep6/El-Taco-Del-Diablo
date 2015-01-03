@@ -109,6 +109,25 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.2.2.v20140723</version>
 			</plugin>
+
+
+			<!-- Create executable war file => java -jar web-site-0.0.1-SNAPSHOT-exec.war -port 8086 -headless -->
+			<plugin>
+				<groupId>org.simplericity.jettyconsole</groupId>
+				<artifactId>jetty-console-maven-plugin</artifactId>
+				<version>1.56</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>createconsole</goal>
+						</goals>
+
+						<configuration>
+							<destinationFile>${project.build.directory}/${project.build.finalName}-exec.war</destinationFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 	</build>
