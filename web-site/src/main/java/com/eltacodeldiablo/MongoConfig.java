@@ -8,8 +8,7 @@ import org.springframework.core.env.Environment;
 
 import com.eltacodeldiablo.business.dao.mongodb.ConverterPrice;
 import com.eltacodeldiablo.business.dao.mongodb.ConverterProductType;
-import com.eltacodeldiablo.business.domain.Order;
-import com.eltacodeldiablo.business.domain.Product;
+import com.eltacodeldiablo.business.dao.mongodb.bean.AggregationOrderDate;
 import com.mongodb.MongoClient;
 
 @Configuration
@@ -27,8 +26,10 @@ public class MongoConfig {
 		Morphia morphia = new Morphia();
 		morphia.getMapper().getConverters().addConverter(new ConverterPrice());
 		morphia.getMapper().getConverters().addConverter(new ConverterProductType(morphia));
-		morphia.map(Product.class);
-		morphia.map(Order.class);
+		// map is only use by morphia.fromObject
+		// morphia.map(Product.class);
+		// morphia.map(Order.class);
+		morphia.map(AggregationOrderDate.class);
 
 		return morphia;
 	}

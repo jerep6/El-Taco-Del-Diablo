@@ -7,32 +7,45 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eltacodeldiablo.business.dao.DaoOrder;
 import com.eltacodeldiablo.business.dao.DaoProduct;
+import com.eltacodeldiablo.business.dao.mongodb.bean.AggregationOrderDate;
 import com.eltacodeldiablo.business.domain.Order;
 import com.eltacodeldiablo.business.domain.OrderProduct;
 import com.eltacodeldiablo.business.domain.Price;
 import com.eltacodeldiablo.business.domain.Product;
 import com.eltacodeldiablo.business.service.ServiceOrder;
+import com.eltacodeldiablo.utils.DateUtils;
 import com.eltacodeldiablo.web.form.OrderForm;
 import com.google.common.base.Preconditions;
 
 @Service
 public class ServiceOrderImpl implements ServiceOrder {
+	private final Logger	LOGGER	= LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private DaoProduct	daoProduct;
+	private DaoProduct		daoProduct;
 
 	@Autowired
-	private DaoOrder	daoOrder;
+	private DaoOrder		daoOrder;
+
+	@Override
+	public List<AggregationOrderDate> getOrderDate() {
+		return daoOrder.getOrderDate();
+	}
 
 	@Override
 	public List<Order> list(Date date) {
-		List<Order> orders = daoOrder.listFromDate(date);
-		return orders;
+		Date boudMin = DateUtils.midnight(date);
+		Date boudMax = DateUtils.addDay(date, 1);
+		LOGGER.debug("Search order between {} and {}", boudMin, boudMax);
+
+		return daoOrder.listFromDate(boudMin, boudMax);
 	}
 
 	private List<OrderProduct> mapOrderProduct(List<String> l) {

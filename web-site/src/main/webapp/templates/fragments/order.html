@@ -64,6 +64,16 @@
 
 
 <div class="row" th:fragment="order_list">
+	<form action="" method="GET">
+		<select class="form-control" name="d" onchange="this.form.submit()">
+			<option th:each="d : ${dates}" 
+					th:selected="${d.active}"
+					th:value="${#calendars.format(d.date,'dd-MM-yyyy')}" 
+					th:text="${#calendars.format(d.date,'dd/MM/yyyy')}+' ('+${d.count}+')'">Date</option>
+		</select>
+	</form>
+	<br />
+	
 	<table class="table table-bordered">
 	 <tr>
 	 	<th th:text="#{cmd.list.table.name}"></th>
