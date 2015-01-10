@@ -1,5 +1,6 @@
 package com.eltacodeldiablo.business.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import org.mongodb.morphia.annotations.Embedded;
 @Getter
 @Setter
 @ToString(of = "name")
+@EqualsAndHashCode(of = { "name", "ingredient", "spice" })
 public class OrderProduct {
 	private String		name;
 	private Price		price;

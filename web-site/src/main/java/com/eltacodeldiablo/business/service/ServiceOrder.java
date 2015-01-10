@@ -21,4 +21,6 @@ public interface ServiceOrder {
 
 	List<AggregationOrderDate> getOrderDate();
 
+	String generateQRCode(List<Order> orders);
+
 }

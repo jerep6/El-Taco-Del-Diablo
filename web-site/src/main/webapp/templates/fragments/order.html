@@ -6,23 +6,21 @@
 	</div>
 
 	<div class="col-sm-7">
-		<h2>Passer votre commande</h2>
+		<h2 th:text="#{cmd.create.title}">Passer votre commande</h2>
 		<form th:action="@{order}" method="POST" th:object="${order}">
 			<div class="form-group">
-				<label th:text="#{cmd.create.name}">Nom</label> 
-					<input 	type="text"
-							class="form-control" 
-							th:field="*{name}"
-							th:placeholder="#{cmd.create.name.placeholder}" />
+				<label th:text="#{cmd.create.name}">Nom</label> <input type="text"
+					class="form-control" th:field="*{name}"
+					th:placeholder="#{cmd.create.name.placeholder}" />
 			</div>
 
 
 			<fieldset>
 				<legend th:text="#{cmd.create.starter}">Entrées</legend>
 				<div class="demi" th:each="prod : ${products[types['ENTREE']]}">
-					<label>
-						<input type="checkbox" th:value="${prod.id}" /> 
-						<span th:text="${prod.name}">Guacamole Chips</span>
+					<label> <input type="checkbox" th:value="${prod.id}"
+						th:field="*{entrees}" /> <span th:text="${prod.name}">Guacamole
+							Chips</span>
 					</label>
 				</div>
 
@@ -31,12 +29,12 @@
 			<fieldset>
 				<legend th:text="#{cmd.create.main_course}">Plats</legend>
 				<div class="demi" th:each="prod : ${products[types['PLAT']]}">
-					<span th:text="${prod.name}">Tacco del diablo</span>
-					<select class="form-control" th:field="*{plats}">
+					<span th:text="${prod.name}">Tacco del diablo</span> <select
+						class="form-control" th:field="*{plats}">
 						<option value=""></option>
-						<option th:each="ingr : ${prod.ingredients}" 
-								th:value="${prod.id}+'__'+${ingr}" 
-								th:text="${ingr}">Ingrédient 1</option>
+						<option th:each="ingr : ${prod.ingredients}"
+							th:value="${prod.id}+'__'+${ingr}" th:text="${ingr}">Ingrédient
+							1</option>
 					</select>
 				</div>
 
@@ -47,7 +45,9 @@
 				<legend th:text="#{cmd.create.dessert}">Dessert</legend>
 
 				<div class="demi" th:each="prod : ${products[types['DESSERT']]}">
-					<label><input type="checkbox" th:value="${prod.id}" /> <span th:text="${prod.name}">Guacamole Chips</span></label>
+					<label><input type="checkbox" th:value="${prod.id}"
+						th:field="*{desserts}" /> <span th:text="${prod.name}">Guacamole
+							Chips</span></label>
 				</div>
 
 			</fieldset>
@@ -64,28 +64,50 @@
 
 
 <div class="row" th:fragment="order_list">
-	<form action="" method="GET">
-		<select class="form-control" name="d" onchange="this.form.submit()">
-			<option th:each="d : ${dates}" 
-					th:selected="${d.active}"
-					th:value="${#calendars.format(d.date,'dd-MM-yyyy')}" 
-					th:text="${#calendars.format(d.date,'dd/MM/yyyy')}+' ('+${d.count}+')'">Date</option>
-		</select>
-	</form>
-	<br />
-	
-	<table class="table table-bordered">
-	 <tr>
-	 	<th th:text="#{cmd.list.table.name}"></th>
-	 	<th th:text="#{cmd.list.table.products}"></th>
-	 	<th th:text="#{cmd.list.table.price}"></th>
-	 </tr>
-	 
-	 <tr th:each="o : ${orders}">
-	 	<td th:text="${o.name}"></td>
-	 	<td th:text="${o.products}"></td>
-	 	<td th:text="${o.total.value}"></td>
-	 </tr>
-	</table>
+	<div class="col-sm-12">
+		<form action="" method="GET" class="form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-1 control-label">Date</label>
+				<div class="col-sm-11">
+					<select class="form-control" name="d" onchange="this.form.submit()">
+						<option value=""></option>
+						<option th:each="d : ${dates}" th:selected="${d.active}"
+							th:value="${#calendars.format(d.date,'dd-MM-yyyy')}"
+							th:text="${#calendars.format(d.date,'dd/MM/yyyy')}+' ('+${d.count}+')'">Date</option>
+					</select>
+				</div>
+			</div>
+		</form>
 
+
+		<div class="row" th:if="${not #lists.isEmpty(orders)}">
+			<table class="table table-bordered">
+				<tr>
+					<th th:text="#{cmd.list.table.name}"></th>
+					<th th:text="#{cmd.list.table.products}"></th>
+					<th th:text="#{cmd.list.table.price}"></th>
+				</tr>
+
+				<tr th:each="o : ${orders}">
+					<td th:text="${o.name}"></td>
+					<td th:text="${o.products}"></td>
+					<td th:text="${o.total.value}"></td>
+				</tr>
+			</table>
+
+			<div style="border: 01px solid gray;">
+				<h3 class="text-center">Commande a envoyer</h3>
+				<div style="display: table-cell">
+					<img th:src="'data:image/png;base64,'+${qrcode}" />
+				</div>
+				<div style="display: table-cell; vertical-align: middle">
+					<span th:utext="${sms}"></span>
+				</div>
+			</div>
+		</div>
+
+
+		<p th:if="${#lists.isEmpty(orders)}" th:text="#{cmd.list.empty}">msg vide</p>
+
+	</div>
 </div>

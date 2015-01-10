@@ -1,8 +1,11 @@
 package com.eltacodeldiablo.business.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,7 @@ import com.eltacodeldiablo.business.domain.Order;
 import com.eltacodeldiablo.business.domain.OrderProduct;
 import com.eltacodeldiablo.business.domain.Price;
 import com.eltacodeldiablo.business.domain.Product;
+import com.eltacodeldiablo.business.domain.ProductType;
 import com.eltacodeldiablo.business.service.ServiceOrder;
 import com.eltacodeldiablo.utils.DateUtils;
 import com.eltacodeldiablo.web.form.OrderForm;
@@ -33,6 +37,50 @@ public class ServiceOrderImpl implements ServiceOrder {
 
 	@Autowired
 	private DaoOrder		daoOrder;
+
+	@Override
+	public String generateQRCode(List<Order> orders) {
+		StringBuilder smsOrder = new StringBuilder();
+		// Product by type
+		Map<ProductType, List<OrderProduct>> productsByType = orders.stream().map(Order::getProducts)
+				.flatMap(Collection::stream).collect(Collectors.groupingBy(OrderProduct::getType));
+
+		// For each type (entrée, plat, dessert) generate string
+		// nombre + label
+		for (Entry<ProductType, List<OrderProduct>> e : productsByType.entrySet()) {
+
+			// Compute quantity for each product
+			Map<OrderProduct, Long> productsQte = e.getValue().stream()
+					.collect(Collectors.groupingBy(op -> op, Collectors.counting()));
+
+			for (Entry<OrderProduct, Long> order : productsQte.entrySet()) {
+				OrderProduct product = order.getKey();
+				Long totalOrder = order.getValue();
+
+				smsOrder.append(totalOrder).append(" ");
+				smsOrder.append(product.getName());
+				if (!Strings.isEmpty(product.getIngredient())) {
+					smsOrder.append(" " + product.getIngredient());
+				}
+				if (!Strings.isEmpty(product.getSpice())) {
+					smsOrder.append(" " + product.getSpice());
+				}
+				smsOrder.append("\n");
+
+			}
+
+			// e.getValue().stream().map(p -> {
+			// StringBuilder s = new StringBuilder();
+			// s.append(p.getName());
+			// if (!Strings.isEmpty(p.getIngredient())) {
+			// s.append(p.getIngredient());
+			// }
+			// return s;
+			// });
+		}
+
+		return smsOrder.toString();
+	}
 
 	@Override
 	public List<AggregationOrderDate> getOrderDate() {
@@ -57,19 +105,23 @@ public class ServiceOrderImpl implements ServiceOrder {
 			// Extract data to form
 			String[] split = s.split("__");
 			String productId = split[0];
-			String ingr = split[1];
+			String ingr = split.length > 1 ? split[1] : "";
 
 			// read product according to its id
 			Product p = daoProduct.read(productId);
 
-			// If ingredient is not found into product => exception
-			Optional<String> ingrFind = p.getIngredients().stream().filter(i -> i.equals(ingr)).findFirst();
-			ingrFind.orElseThrow(() -> new RuntimeException("Pouet"));
-
 			// create order product
 			OrderProduct orderProduct = new OrderProduct();
+
+			// Some products don't have ingredient (desserts for example)
+			if (!Strings.isEmpty(ingr)) {
+				// If ingredient is not found into product => exception
+				Optional<String> ingrFind = p.getIngredients().stream().filter(i -> i.equals(ingr)).findFirst();
+				ingrFind.orElseThrow(() -> new RuntimeException("Pouet"));
+				orderProduct.setIngredient(ingrFind.get());
+			}
+
 			orderProduct.setName(p.getName());
-			orderProduct.setIngredient(ingrFind.get());
 			orderProduct.setPrice(p.getPrice());
 			orderProduct.setType(p.getType());
 			products.add(orderProduct);
