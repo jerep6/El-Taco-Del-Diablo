@@ -6,6 +6,7 @@ import java.util.List;
 import com.eltacodeldiablo.business.dao.mongodb.bean.AggregationOrderDate;
 import com.eltacodeldiablo.business.domain.Order;
 import com.eltacodeldiablo.web.form.OrderForm;
+import com.eltacodeldiablo.web.form.SMS;
 
 public interface ServiceOrder {
 
@@ -21,6 +22,8 @@ public interface ServiceOrder {
 
 	List<AggregationOrderDate> getOrderDate();
 
-	String generateQRCode(List<Order> orders);
+	SMS generateSMS(List<Order> orders);
+
+	String generateQRCode(String txt);
 
 }

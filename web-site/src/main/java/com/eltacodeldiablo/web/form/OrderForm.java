@@ -16,4 +16,22 @@ public class OrderForm {
 	private List<String>	plats		= new ArrayList<>(0);
 	private List<String>	entrees		= new ArrayList<>(0);
 	private List<String>	desserts	= new ArrayList<>(0);
+
+	public void setDesserts(List<String> d) {
+		if (d != null) {
+			desserts = d;
+		}
+	}
+
+	public void setEntrees(List<String> d) {
+		if (d != null) {
+			desserts = d;
+		}
+	}
+
+	public void setPlats(List<String> d) {
+		if (d != null) {
+			desserts = d;
+		}
+	}
 }

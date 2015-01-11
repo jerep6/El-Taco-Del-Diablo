@@ -8,13 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.glxn.qrgen.core.image.ImageType;
-import net.glxn.qrgen.javase.QRCode;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +25,7 @@ import com.eltacodeldiablo.business.service.ServiceProduct;
 import com.eltacodeldiablo.utils.DateUtils;
 import com.eltacodeldiablo.web.bean.OrderDateCount;
 import com.eltacodeldiablo.web.form.OrderForm;
+import com.eltacodeldiablo.web.form.SMS;
 
 @Controller
 public class ControllerCommand {
@@ -86,15 +83,11 @@ public class ControllerCommand {
 		Date dateToList = getSearchOrderDate(date);
 		List<Order> orders = serviceOrder.list(dateToList);
 		List<AggregationOrderDate> orderDate = serviceOrder.getOrderDate();
-		String sms = serviceOrder.generateQRCode(orders);
+		SMS sms = serviceOrder.generateSMS(orders);
 
 		model.addAttribute("orders", orders);
 		model.addAttribute("dates", convert(dateToList, orderDate));
-
-		byte[] img = Base64Utils.encode(QRCode.from(sms).withCharset("UTF-8").to(ImageType.PNG).withSize(250, 250)
-				.stream().toByteArray());
-		model.addAttribute("qrcode", new String(img));
-		model.addAttribute("sms", sms.replace("\n", "<br />"));
+		model.addAttribute("sms", sms);
 
 		Map<String, String> tplMiddle = new HashMap<>();
 		tplMiddle.put("html", "fragments/order");
@@ -112,5 +105,14 @@ public class ControllerCommand {
 	@ModelAttribute
 	public void populateModel() {
 
+	}
+
+	@RequestMapping(value = "/order/sms", method = RequestMethod.POST)
+	public String sms(@ModelAttribute SMS sms, Model model) {
+		System.out.println(sms);
+
+		String qrcodeBase64 = serviceOrder.generateQRCode(sms.getText());
+
+		return "redirect:/order";
 	}
 }

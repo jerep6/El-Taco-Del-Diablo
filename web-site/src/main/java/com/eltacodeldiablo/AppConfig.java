@@ -52,7 +52,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		templateResolver.setCacheable(false);
 		templateResolver.setPrefix("/templates/");
 		templateResolver.setSuffix(".html");
-		templateResolver.setTemplateMode("XHTML");
+		templateResolver.setTemplateMode("HTML5");
 
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver);

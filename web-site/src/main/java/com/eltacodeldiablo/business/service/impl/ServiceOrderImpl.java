@@ -9,11 +9,15 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
+
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 
 import com.eltacodeldiablo.business.dao.DaoOrder;
 import com.eltacodeldiablo.business.dao.DaoProduct;
@@ -26,6 +30,7 @@ import com.eltacodeldiablo.business.domain.ProductType;
 import com.eltacodeldiablo.business.service.ServiceOrder;
 import com.eltacodeldiablo.utils.DateUtils;
 import com.eltacodeldiablo.web.form.OrderForm;
+import com.eltacodeldiablo.web.form.SMS;
 import com.google.common.base.Preconditions;
 
 @Service
@@ -39,8 +44,8 @@ public class ServiceOrderImpl implements ServiceOrder {
 	private DaoOrder		daoOrder;
 
 	@Override
-	public String generateQRCode(List<Order> orders) {
-		StringBuilder smsOrder = new StringBuilder();
+	public SMS generateSMS(List<Order> orders) {
+		StringBuilder builderSmsOrder = new StringBuilder();
 		// Product by type
 		Map<ProductType, List<OrderProduct>> productsByType = orders.stream().map(Order::getProducts)
 				.flatMap(Collection::stream).collect(Collectors.groupingBy(OrderProduct::getType));
@@ -57,29 +62,29 @@ public class ServiceOrderImpl implements ServiceOrder {
 				OrderProduct product = order.getKey();
 				Long totalOrder = order.getValue();
 
-				smsOrder.append(totalOrder).append(" ");
-				smsOrder.append(product.getName());
+				builderSmsOrder.append(totalOrder).append(" ");
+				builderSmsOrder.append(product.getName());
 				if (!Strings.isEmpty(product.getIngredient())) {
-					smsOrder.append(" " + product.getIngredient());
+					builderSmsOrder.append(" " + product.getIngredient());
 				}
 				if (!Strings.isEmpty(product.getSpice())) {
-					smsOrder.append(" " + product.getSpice());
+					builderSmsOrder.append(" " + product.getSpice());
 				}
-				smsOrder.append("\n");
+				builderSmsOrder.append("\n");
 
 			}
-
-			// e.getValue().stream().map(p -> {
-			// StringBuilder s = new StringBuilder();
-			// s.append(p.getName());
-			// if (!Strings.isEmpty(p.getIngredient())) {
-			// s.append(p.getIngredient());
-			// }
-			// return s;
-			// });
 		}
+		return new SMS(builderSmsOrder.toString(), generateQRCode(builderSmsOrder.toString()));
+	}
 
-		return smsOrder.toString();
+	@Override
+	public String generateQRCode(String txt) {
+		if (com.google.common.base.Strings.isNullOrEmpty(txt)) {
+			return "";
+		}
+		byte[] img = Base64Utils.encode(QRCode.from(txt).withCharset("UTF-8").to(ImageType.PNG).withSize(250, 250)
+				.stream().toByteArray());
+		return new String(img);
 	}
 
 	@Override
