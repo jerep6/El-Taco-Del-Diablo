@@ -11,7 +11,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,9 +28,14 @@ import com.eltacodeldiablo.utils.DateUtils;
 import com.eltacodeldiablo.web.bean.OrderDateCount;
 import com.eltacodeldiablo.web.form.OrderForm;
 import com.eltacodeldiablo.web.form.SMS;
+import com.eltacodeldiablo.web.session.SessionBean;
 
 @Controller
+// @SessionAttributes("sessionSMS")
 public class ControllerCommand {
+
+	@Autowired
+	private SessionBean		sessionbean;
 
 	@Autowired
 	private ServiceProduct	serviceProduct;
@@ -78,12 +85,16 @@ public class ControllerCommand {
 	}
 
 	@RequestMapping(value = "/order", method = RequestMethod.GET)
-	public String listOrder(Model model, @RequestParam(value = "d", required = false) String date) {
+	public String listOrder(ModelMap model, @RequestParam(value = "d", required = false) String date) {
 
 		Date dateToList = getSearchOrderDate(date);
 		List<Order> orders = serviceOrder.list(dateToList);
 		List<AggregationOrderDate> orderDate = serviceOrder.getOrderDate();
-		SMS sms = serviceOrder.generateSMS(orders);
+
+		SMS sms = (SMS) sessionbean.getFlashData("smsFlash");
+		if (sms == null) {
+			sms = serviceOrder.generateSMS(orders);
+		}
 
 		model.addAttribute("orders", orders);
 		model.addAttribute("dates", convert(dateToList, orderDate));
@@ -108,11 +119,13 @@ public class ControllerCommand {
 	}
 
 	@RequestMapping(value = "/order/sms", method = RequestMethod.POST)
-	public String sms(@ModelAttribute SMS sms, Model model) {
-		System.out.println(sms);
-
+	public String sms(@ModelAttribute SMS sms, Model model,
+			@RequestHeader(value = "referer", required = false) final String referer) {
 		String qrcodeBase64 = serviceOrder.generateQRCode(sms.getText());
+		sms.setQrcode(qrcodeBase64);
 
-		return "redirect:/order";
+		// Add sms with qrcode into session
+		sessionbean.addFlashData("smsFlash", sms);
+		return "redirect:" + referer;
 	}
 }
